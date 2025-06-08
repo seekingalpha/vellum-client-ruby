@@ -5,6 +5,7 @@ require "faraday"
 require "faraday/multipart"
 require "faraday/retry"
 require "async/http/faraday"
+require "faraday/net_http_persistent"
 
 module Vellum
   class RequestClient
@@ -26,6 +27,7 @@ module Vellum
       @conn = Faraday.new(headers: @headers) do |faraday|
         faraday.request :multipart
         faraday.request :json
+        faraday.adapter :net_http_persistent, pool_size: 20, idle_timeout: 1200
         faraday.response :raise_error, include_request: true
         faraday.request :retry, { max: max_retries } unless max_retries.nil?
         faraday.options.timeout = timeout_in_seconds unless timeout_in_seconds.nil?
@@ -53,7 +55,7 @@ module Vellum
         faraday.request :multipart
         faraday.request :json
         faraday.response :raise_error, include_request: true
-        faraday.adapter :async_http
+        faraday.adapter :async_http, clients: Async::HTTP::Faraday::PersistentClients
         faraday.request :retry, { max: max_retries } unless max_retries.nil?
         faraday.options.timeout = timeout_in_seconds unless timeout_in_seconds.nil?
       end
