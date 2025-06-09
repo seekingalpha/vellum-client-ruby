@@ -119,7 +119,7 @@ module Vellum
           release_tag: release_tag,
           external_id: external_id
         }.compact
-        req.url "#{@request_client.default_environment[:Predict]}/v1/execute-workflow"
+        req.url "#{@request_client.default_environment[:Predict]}/v1/execute-workflow-stream"
       end
       ExecuteWorkflowResponse.from_json(json_object: response.body)
     end
@@ -342,7 +342,7 @@ module Vellum
           release_tag: release_tag,
           external_id: external_id
         }.compact
-        req.url "#{@async_request_client.default_environment[:Predict]}/v1/execute-workflow"
+        req.url "#{@async_request_client.default_environment[:Predict]}/v1/execute-workflow-stream"
       end
       ExecuteWorkflowResponse.from_json(json_object: response.body)
     end
